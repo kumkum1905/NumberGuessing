@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+
+    background:linear-gradient(
+        135deg,
+        #4f46e5 0%,
+        #3b82f6 30%,
+        #06b6d4 65%,
+        #22c55e 100%
+    );
+
+    background-size:300% 300%;
+    animation:bgAnimation 12s ease infinite;
+}
+
+@keyframes bgAnimation{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.container{
+
+    width:min(95vw,520px);
+
+    background:rgba(255,255,255,.18);
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.3);
+
+    border-radius:25px;
+
+    padding:35px;
+
+    text-align:center;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25),
+        0 0 40px rgba(255,255,255,.15);
+}
+
+h1{
+    color:white;
+    font-size:2rem;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#e5e7eb;
+    margin-bottom:25px;
+    font-size:1rem;
+}
+
+.game-box{
+    display:flex;
+    justify-content:center;
+    margin-bottom:20px;
+}
+
+.game-box form{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+input{
+
+    width:170px;
+    padding:14px;
+
+    font-size:22px;
+    font-weight:bold;
+
+    text-align:center;
+
+    border:none;
+    border-radius:12px;
+
+    background:white;
+
+    transition:.3s;
+    outline:none;
+}
+
+input:focus{
+
+    transform:scale(1.03);
+
+    box-shadow:
+        0 0 0 3px rgba(255,255,255,.35),
+        0 0 18px rgba(255,255,255,.5);
+}
+
+button{
+
+    padding:14px 24px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    color:white;
+
+    font-size:17px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(37,99,235,.35);
+}
+
+button:active{
+    transform:scale(.97);
+}
+
+.attempt{
+
+    color:white;
+
+    font-size:1.15rem;
+
+    font-weight:600;
+
+    margin:20px 0;
+}
+
+#attempts{
+
+    color:#facc15;
+
+    font-size:1.4rem;
+}
+
+.result{
+
+    height:220px;
+
+    overflow-y:auto;
+
+    background:rgba(255,255,255,.92);
+
+    border-radius:15px;
+
+    padding:15px;
+
+    text-align:left;
+
+    line-height:1.8;
+
+    font-size:16px;
+
+    box-shadow:inset 0 0 12px rgba(0,0,0,.08);
+}
+
+.result p{
+
+    padding:8px 12px;
+
+    margin-bottom:8px;
+
+    background:#f8fafc;
+
+    border-left:5px solid #3b82f6;
+
+    border-radius:8px;
+
+    word-wrap:break-word;
+}
+
+.result::-webkit-scrollbar{
+    width:10px;
+}
+
+.result::-webkit-scrollbar-track{
+    background:#dbeafe;
+    border-radius:10px;
+}
+
+.result::-webkit-scrollbar-thumb{
+    background:#3b82f6;
+    border-radius:10px;
+}
+
+.result::-webkit-scrollbar-thumb:hover{
+    background:#2563eb;
+}
+
+.correct{
+    color:#16a34a;
+    font-weight:bold;
+}
+
+.partial{
+    color:#d97706;
+    font-weight:bold;
+}
+
+.wrong{
+    color:#dc2626;
+    font-weight:bold;
+}
+
+#refreshBtn{
+
+    margin-top:15px;
+
+    width:100%;
+
+    padding:15px;
+
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+
+    color:white;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+#refreshBtn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(34,197,94,.35);
+}
+
+#refreshBtn:active{
+    transform:scale(.98);
+}
+
+@media(max-width:600px){
+
+    .container{
+
+        width:100%;
+
+        padding:25px;
+    }
+
+    h1{
+        font-size:1.6rem;
+    }
+
+    .game-box form{
+
+        flex-direction:column;
+
+        align-items:center;
+    }
+
+    input{
+
+        width:100%;
+    }
+
+    button{
+
+        width:100%;
+    }
+
+    .result{
+
+        height:180px;
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🎮 Number Guessing Game</h1>
+
+    <p class="subtitle">
+        Guess the hidden 4-digit number
+    </p>
+
+    <div class="game-box">
+        
+        <form action="/check" method="POST">
+        <input
+            type="text"
+            maxlength="4"
+            minlength="4"
+            id="guess"
+            placeholder="1234"
+            name="newGuess"
+        >
+
+        <button id="guessBtn" type="submit" >
+            Guess
+        </button>
+    </form>
+
+    </div>
+
+    <div class="attempt">
+        Attempts :
+        <span id="attempts">{{apt}}</span>
+    </div>
+
+    <div class="result">
+        {% for msg in messages %}
+            <p>{{ msg }}</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<script>
+
+    // Flask variable -> JavaScript
+    const ended = {{ ended|tojson }};
+
+    function addRefreshButton() {
+
+        // Don't create multiple buttons
+        if (document.getElementById("refreshBtn")) return;
+
+        // Select the game box
+        const gameBox = document.querySelector(".game-box");
+
+        // Hide the form
+        const form = gameBox.querySelector("form");
+        if (form) {
+            form.style.display = "none";
+        }
+
+        // Create button
+        const btn = document.createElement("button");
+
+        btn.id = "refreshBtn";
+        btn.type = "button";
+        btn.innerHTML = "🔄 Play Again";
+
+        // Redirect to home
+        btn.addEventListener("click", function () {
+            window.location.href = "/";
+        });
+
+        // Append button
+        gameBox.appendChild(btn);
+    }
+
+    // If game ended
+    if (ended) {
+        addRefreshButton();
+    }
+
+</script>
+
+</body>
+</html>
